@@ -503,8 +503,9 @@ func (e *Engine) runBin() error {
 				atomic.AddUint64(&e.round, 1)
 				go killFunc(cmd, stdout, stderr, killCh, processExit, &wg)
 
-				_, _ = io.Copy(os.Stdout, stdout)
-				_, _ = io.Copy(os.Stderr, stderr)
+				go io.Copy(os.Stdout, stdout)
+				go io.Copy(os.Stderr, stderr)
+
 				_, _ = cmd.Process.Wait()
 				close(processExit)
 
